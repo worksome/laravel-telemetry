@@ -1,24 +1,25 @@
 {
-    "name": "vendor-slug/package-slug",
-    "description": ":package_description",
+    "name": "worksome/laravel-telemetry",
+    "description": "Telemetry support for Laravel",
     "keywords": [
-        ":vendor_name",
+        "worksome",
         "laravel",
-        ":package_slug"
+        "laravel-telemetry"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/worksome/laravel-telemetry",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Oliver",
+            "email": "oliver@worksome.com",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.2",
-        "spatie/laravel-package-tools": "^1.13.8",
-        "illuminate/contracts": "^9.46"
+        "illuminate/contracts": "^9.46",
+        "open-telemetry/opentelemetry": "^0.0.17",
+        "php-http/guzzle7-adapter": "^1.0"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.4",
@@ -33,13 +34,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Worksome\\LaravelTelemetry\\": "src",
+            "Worksome\\LaravelTelemetry\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Worksome\\LaravelTelemetry\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -66,10 +67,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Worksome\\LaravelTelemetry\\LaravelTelemetryServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "LaravelTelemetry": "Worksome\\LaravelTelemetry\\Facades\\LaravelTelemetry"
             }
         }
     },
