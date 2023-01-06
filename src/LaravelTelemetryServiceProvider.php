@@ -35,18 +35,20 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
     public function boot(
         LoggerInterface $logger,
         ConfigConfigurationResolver $configResolver,
-        MeterProviderSdkInterface $meter,
-        TracerProviderSdkInterface $tracer,
     ): void
     {
         $this->publishes([
             __DIR__ . '/../config/telemetry.php' => $this->app->configPath('telemetry'),
         ]);
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/telemetry.php',
+            'telemetry',
+        );
 
         LoggerHolder::set($logger);
         CompositeResolver::instance()->addResolver($configResolver);
 
-        $this->app->terminating(function () use ($meter, $tracer) {
+        $this->app->terminating(function (MeterProviderSdkInterface $meter, TracerProviderSdkInterface $tracer) {
             $meter->shutdown();
             $tracer->shutdown();
         });

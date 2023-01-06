@@ -22,7 +22,8 @@ class ConfigConfigurationResolver implements ResolverInterface
     private function getKey(string $variableName): string
     {
         $names = collect(explode('_', $variableName))
-            ->map(fn(string $key) => strtolower($variableName))
+            ->map(fn(string $key) => strtolower($key))
+            ->skip(1)
             ->all();
 
         return implode('.', [self::PREFIX, ...$names]);
