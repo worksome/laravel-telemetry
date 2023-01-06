@@ -7,10 +7,19 @@ namespace Worksome\LaravelTelemetry;
 use Illuminate\Support\ServiceProvider;
 use OpenTelemetry\API\Metrics\MeterProviderInterface;
 use OpenTelemetry\API\Trace\TracerProviderInterface;
+use OpenTelemetry\SDK\Common\Attribute\Attributes;
 use OpenTelemetry\SDK\Common\Configuration\Resolver\CompositeResolver;
+use OpenTelemetry\SDK\Common\Instrumentation\InstrumentationScopeFactory;
 use OpenTelemetry\SDK\Common\Log\LoggerHolder;
-use OpenTelemetry\SDK\Metrics\MeterProviderFactory;
+use OpenTelemetry\SDK\Common\Time\ClockFactory;
+use OpenTelemetry\SDK\FactoryRegistry;
+use OpenTelemetry\SDK\Metrics\Exemplar\ExemplarFilter\WithSampledTraceExemplarFilter;
+use OpenTelemetry\SDK\Metrics\MeterProvider;
 use OpenTelemetry\SDK\Metrics\MeterProviderInterface as MeterProviderSdkInterface;
+use OpenTelemetry\SDK\Metrics\MetricReader\ExportingReader;
+use OpenTelemetry\SDK\Metrics\StalenessHandler\NoopStalenessHandlerFactory;
+use OpenTelemetry\SDK\Metrics\View\CriteriaViewRegistry;
+use OpenTelemetry\SDK\Resource\ResourceInfoFactory;
 use OpenTelemetry\SDK\Trace\TracerProviderFactory;
 use OpenTelemetry\SDK\Trace\TracerProviderInterface as TracerProviderSdkInterface;
 use Psr\Log\LoggerInterface;
@@ -21,7 +30,22 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
     {
         $this->app->singleton(
             MeterProviderSdkInterface::class,
-            fn() => (new MeterProviderFactory())->create()
+            fn() => new MeterProvider(
+                null,
+                ResourceInfoFactory::defaultResource(),
+                ClockFactory::getDefault(),
+                Attributes::factory(),
+                new InstrumentationScopeFactory(Attributes::factory()),
+                [
+                    new ExportingReader(
+                        FactoryRegistry::metricExporterFactory('otlp')->create(),
+                        ClockFactory::getDefault()
+                    ),
+                ],
+                new CriteriaViewRegistry(),
+                new WithSampledTraceExemplarFilter(),
+                new NoopStalenessHandlerFactory(),
+            )
         );
         $this->app->bind(MeterProviderInterface::class, MeterProviderSdkInterface::class);
 
