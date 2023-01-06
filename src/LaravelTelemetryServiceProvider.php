@@ -48,9 +48,18 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
         LoggerHolder::set($logger);
         CompositeResolver::instance()->addResolver($configResolver);
 
-        $this->app->terminating(function (MeterProviderSdkInterface $meter, TracerProviderSdkInterface $tracer) {
-            $meter->shutdown();
-            $tracer->shutdown();
+        $this->app->terminating(function () {
+            if ($this->app->resolved(MeterProviderSdkInterface::class)) {
+                /** @var MeterProviderSdkInterface $meter */
+                $meter = $this->app->get(MeterProviderSdkInterface::class);
+                $meter->shutdown();
+            }
+
+            if ($this->app->resolved(TracerProviderSdkInterface::class)) {
+                /** @var TracerProviderSdkInterface $tracer */
+                $tracer = $this->app->get(TracerProviderSdkInterface::class);
+                $tracer->shutdown();
+            }
         });
     }
 }
