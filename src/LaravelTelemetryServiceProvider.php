@@ -38,7 +38,7 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
     ): void
     {
         $this->publishes([
-            __DIR__ . '/../config/telemetry.php' => $this->app->configPath('telemetry'),
+            __DIR__ . '/../config/telemetry.php' => $this->app->configPath('telemetry.php'),
         ], 'laravel-telemetry-config');
         $this->mergeConfigFrom(
             __DIR__ . '/../config/telemetry.php',
