@@ -56,10 +56,7 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
         $this->app->bind(TracerProviderInterface::class, TracerProviderSdkInterface::class);
     }
 
-    public function boot(
-        LoggerInterface $logger,
-        ConfigConfigurationResolver $configResolver,
-    ): void
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/../config/telemetry.php' => $this->app->configPath('telemetry.php'),
@@ -69,8 +66,23 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
             'telemetry',
         );
 
-        LoggerHolder::set($logger);
-        CompositeResolver::instance()->addResolver($configResolver);
+        $this->app->beforeResolving(MeterProviderInterface::class, function () {
+            /** @var LoggerInterface $logger */
+            $logger = $this->app->get(LoggerInterface::class);
+            /** @var ConfigConfigurationResolver $configResolver */
+            $configResolver = $this->app->get(ConfigConfigurationResolver::class);
+            LoggerHolder::set($logger);
+            CompositeResolver::instance()->addResolver($configResolver);
+        });
+
+        $this->app->beforeResolving(TracerProviderInterface::class, function () {
+            /** @var LoggerInterface $logger */
+            $logger = $this->app->get(LoggerInterface::class);
+            /** @var ConfigConfigurationResolver $configResolver */
+            $configResolver = $this->app->get(ConfigConfigurationResolver::class);
+            LoggerHolder::set($logger);
+            CompositeResolver::instance()->addResolver($configResolver);
+        });
 
         $this->app->terminating(function () {
             if ($this->app->resolved(MeterProviderSdkInterface::class)) {
