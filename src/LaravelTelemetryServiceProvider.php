@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Worksome\LaravelTelemetry;
 
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Queue\Events\WorkerStopping;
 use Illuminate\Support\ServiceProvider;
 use OpenTelemetry\API\Metrics\MeterProviderInterface;
 use OpenTelemetry\API\Trace\TracerProviderInterface;
@@ -82,6 +84,10 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
             $configResolver = $this->app->get(ConfigConfigurationResolver::class);
             LoggerHolder::set($logger);
             CompositeResolver::instance()->addResolver($configResolver);
+        });
+
+        $this->callAfterResolving(Dispatcher::class, function (Dispatcher $event) {
+            $event->listen(WorkerStopping::class, WorkerStoppingFlush::class);
         });
 
         $this->app->terminating(function () {
