@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Worksome\LaravelTelemetry;
 
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Queue\Events\WorkerStopping;
 use Illuminate\Support\ServiceProvider;
@@ -30,9 +31,12 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(
-            MeterProviderSdkInterface::class,
-            fn() => new MeterProvider(
+        $this->app->singleton(MeterProviderSdkInterface::class, function () {
+            if (! $this->app->make(Repository::class)->get('telemetry.enabled')) {
+                return null;
+            }
+
+            return new MeterProvider(
                 null,
                 ResourceInfoFactory::defaultResource(),
                 ClockFactory::getDefault(),
@@ -47,28 +51,38 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
                 new CriteriaViewRegistry(),
                 new WithSampledTraceExemplarFilter(),
                 new NoopStalenessHandlerFactory(),
-            )
-        );
+            );
+        });
+
         $this->app->bind(MeterProviderInterface::class, MeterProviderSdkInterface::class);
 
-        $this->app->singleton(
-            TracerProviderSdkInterface::class,
-            fn() => (new TracerProviderFactory())->create()
-        );
+        $this->app->singleton(TracerProviderSdkInterface::class, function () {
+            if (! $this->app->make(Repository::class)->get('telemetry.enabled')) {
+                return null;
+            }
+
+            return (new TracerProviderFactory())->create();
+        });
+
         $this->app->bind(TracerProviderInterface::class, TracerProviderSdkInterface::class);
     }
 
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/telemetry.php' => $this->app->configPath('telemetry.php'),
+            __DIR__.'/../config/telemetry.php' => $this->app->configPath('telemetry.php'),
         ], 'laravel-telemetry-config');
+
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/telemetry.php',
+            __DIR__.'/../config/telemetry.php',
             'telemetry',
         );
 
         $this->app->beforeResolving(MeterProviderInterface::class, function () {
+            if (! $this->app->make(Repository::class)->get('telemetry.enabled')) {
+                return;
+            }
+
             /** @var LoggerInterface $logger */
             $logger = $this->app->get(LoggerInterface::class);
             /** @var ConfigConfigurationResolver $configResolver */
@@ -78,6 +92,10 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
         });
 
         $this->app->beforeResolving(TracerProviderInterface::class, function () {
+            if (! $this->app->make(Repository::class)->get('telemetry.enabled')) {
+                return;
+            }
+
             /** @var LoggerInterface $logger */
             $logger = $this->app->get(LoggerInterface::class);
             /** @var ConfigConfigurationResolver $configResolver */
@@ -87,10 +105,18 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
         });
 
         $this->callAfterResolving(Dispatcher::class, function (Dispatcher $event) {
+            if (! $this->app->make(Repository::class)->get('telemetry.enabled')) {
+                return;
+            }
+
             $event->listen(WorkerStopping::class, WorkerStoppingFlush::class);
         });
 
         $this->app->terminating(function () {
+            if (! $this->app->make(Repository::class)->get('telemetry.enabled')) {
+                return;
+            }
+
             if ($this->app->resolved(MeterProviderSdkInterface::class)) {
                 /** @var MeterProviderSdkInterface $meter */
                 $meter = $this->app->get(MeterProviderSdkInterface::class);
