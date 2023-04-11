@@ -18,7 +18,10 @@
     "require": {
         "php": "^8.2",
         "illuminate/contracts": "^10.0",
+        "open-telemetry/api": "^0.0.17",
+        "open-telemetry/context": "^0.0.17",
         "open-telemetry/sdk": "^0.0.17",
+        "open-telemetry/exporter-otlp": "^0.0.17",
         "php-http/guzzle7-adapter": "^1.0"
     },
     "require-dev": {
