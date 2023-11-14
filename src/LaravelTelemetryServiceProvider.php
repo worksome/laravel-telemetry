@@ -8,14 +8,14 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Queue\Events\WorkerStopping;
 use Illuminate\Support\ServiceProvider;
+use OpenTelemetry\API\LoggerHolder;
 use OpenTelemetry\API\Metrics\MeterProviderInterface;
 use OpenTelemetry\API\Trace\TracerProviderInterface;
 use OpenTelemetry\SDK\Common\Attribute\Attributes;
 use OpenTelemetry\SDK\Common\Configuration\Resolver\CompositeResolver;
 use OpenTelemetry\SDK\Common\Instrumentation\InstrumentationScopeFactory;
-use OpenTelemetry\SDK\Common\Log\LoggerHolder;
 use OpenTelemetry\SDK\Common\Time\ClockFactory;
-use OpenTelemetry\SDK\FactoryRegistry;
+use OpenTelemetry\SDK\Registry;
 use OpenTelemetry\SDK\Metrics\Exemplar\ExemplarFilter\WithSampledTraceExemplarFilter;
 use OpenTelemetry\SDK\Metrics\MeterProvider;
 use OpenTelemetry\SDK\Metrics\MeterProviderInterface as MeterProviderSdkInterface;
@@ -44,8 +44,7 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
                 new InstrumentationScopeFactory(Attributes::factory()),
                 [
                     new ExportingReader(
-                        FactoryRegistry::metricExporterFactory('otlp')->create(),
-                        ClockFactory::getDefault()
+                        Registry::metricExporterFactory('otlp')->create(),
                     ),
                 ],
                 new CriteriaViewRegistry(),
