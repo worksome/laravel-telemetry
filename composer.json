@@ -18,18 +18,18 @@
     "require": {
         "php": "^8.2",
         "illuminate/contracts": "^10.0",
-        "open-telemetry/api": "^0.0.17",
-        "open-telemetry/sdk": "^0.0.17",
-        "open-telemetry/exporter-otlp": "^0.0.17",
+        "open-telemetry/api": "^1.0",
+        "open-telemetry/sdk": "^1.0",
+        "open-telemetry/exporter-otlp": "^1.0",
         "php-http/guzzle7-adapter": "^1.0"
     },
     "require-dev": {
-        "nunomaduro/collision": "^7.0",
-        "nunomaduro/larastan": "^2.3.4",
-        "orchestra/testbench": "^8.0",
-        "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0",
-        "worksome/coding-style": "^2.5"
+        "nunomaduro/collision": "^7.10",
+        "nunomaduro/larastan": "^2.6.4",
+        "orchestra/testbench": "^8.15",
+        "pestphp/pest": "^2.24.3",
+        "pestphp/pest-plugin-laravel": "^2.2",
+        "worksome/coding-style": "^2.6.1"
     },
     "autoload": {
         "psr-4": {
