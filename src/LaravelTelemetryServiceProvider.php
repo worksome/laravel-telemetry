@@ -15,13 +15,13 @@ use OpenTelemetry\SDK\Common\Attribute\Attributes;
 use OpenTelemetry\SDK\Common\Configuration\Resolver\CompositeResolver;
 use OpenTelemetry\SDK\Common\Instrumentation\InstrumentationScopeFactory;
 use OpenTelemetry\SDK\Common\Time\ClockFactory;
-use OpenTelemetry\SDK\Registry;
 use OpenTelemetry\SDK\Metrics\Exemplar\ExemplarFilter\WithSampledTraceExemplarFilter;
 use OpenTelemetry\SDK\Metrics\MeterProvider;
 use OpenTelemetry\SDK\Metrics\MeterProviderInterface as MeterProviderSdkInterface;
 use OpenTelemetry\SDK\Metrics\MetricReader\ExportingReader;
 use OpenTelemetry\SDK\Metrics\StalenessHandler\NoopStalenessHandlerFactory;
 use OpenTelemetry\SDK\Metrics\View\CriteriaViewRegistry;
+use OpenTelemetry\SDK\Registry;
 use OpenTelemetry\SDK\Resource\ResourceInfoFactory;
 use OpenTelemetry\SDK\Trace\TracerProviderFactory;
 use OpenTelemetry\SDK\Trace\TracerProviderInterface as TracerProviderSdkInterface;
@@ -69,11 +69,11 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/telemetry.php' => $this->app->configPath('telemetry.php'),
+            __DIR__ . '/../config/telemetry.php' => $this->app->configPath('telemetry.php'),
         ], 'laravel-telemetry-config');
 
         $this->mergeConfigFrom(
-            __DIR__.'/../config/telemetry.php',
+            __DIR__ . '/../config/telemetry.php',
             'telemetry',
         );
 
