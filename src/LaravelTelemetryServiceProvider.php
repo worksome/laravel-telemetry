@@ -88,10 +88,10 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
     {
         /** @var LoggerInterface $logger */
         $logger = $this->app->get(LoggerInterface::class);
-        /** @var ConfigConfigurationResolver $configResolver */
-        $configResolver = $this->app->get(ConfigConfigurationResolver::class);
 
         LoggerHolder::set($logger);
-        CompositeResolver::instance()->addResolver($configResolver);
+        CompositeResolver::instance()->addResolver(
+            new ConfigConfigurationResolver()
+        );
     }
 }
