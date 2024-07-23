@@ -55,9 +55,7 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
             'telemetry',
         );
 
-        $this->app->beforeResolving(LoggerProviderInterface::class, $this->prepareConfigResolver(...));
-        $this->app->beforeResolving(MeterProviderInterface::class, $this->prepareConfigResolver(...));
-        $this->app->beforeResolving(TracerProviderInterface::class, $this->prepareConfigResolver(...));
+        $this->prepareConfigResolver();
 
         $this->callAfterResolving(Dispatcher::class, function (Dispatcher $event) {
             if ($this->app->make(Repository::class)->get('telemetry.sdk.disabled')) {
