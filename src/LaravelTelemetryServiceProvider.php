@@ -9,9 +9,12 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Queue\Events\WorkerStopping;
 use Illuminate\Support\ServiceProvider;
 use OpenTelemetry\API\LoggerHolder;
+use OpenTelemetry\API\Logs\LoggerProviderInterface;
 use OpenTelemetry\API\Metrics\MeterProviderInterface;
 use OpenTelemetry\API\Trace\TracerProviderInterface;
 use OpenTelemetry\SDK\Common\Configuration\Resolver\CompositeResolver;
+use OpenTelemetry\SDK\Logs\LoggerProviderFactory;
+use OpenTelemetry\SDK\Logs\LoggerProviderInterface as LoggerProviderSdkInterface;
 use OpenTelemetry\SDK\Metrics\MeterProviderFactory;
 use OpenTelemetry\SDK\Metrics\MeterProviderInterface as MeterProviderSdkInterface;
 use OpenTelemetry\SDK\Trace\TracerProviderFactory;
@@ -22,6 +25,12 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->app->singleton(LoggerProviderSdkInterface::class, function () {
+            return (new LoggerProviderFactory())->create();
+        });
+
+        $this->app->bind(LoggerProviderInterface::class, LoggerProviderSdkInterface::class);
+
         $this->app->singleton(MeterProviderSdkInterface::class, function () {
             return (new MeterProviderFactory())->create();
         });
@@ -46,6 +55,7 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
             'telemetry',
         );
 
+        $this->app->beforeResolving(LoggerProviderInterface::class, $this->prepareConfigResolver(...));
         $this->app->beforeResolving(MeterProviderInterface::class, $this->prepareConfigResolver(...));
         $this->app->beforeResolving(TracerProviderInterface::class, $this->prepareConfigResolver(...));
 
