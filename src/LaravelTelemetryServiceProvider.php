@@ -66,8 +66,10 @@ class LaravelTelemetryServiceProvider extends ServiceProvider
         });
 
         $this->app->terminating(function () {
-            if ($this->app->make(Repository::class)->get('telemetry.sdk.disabled')) {
-                return;
+            if ($this->app->resolved(LoggerProviderSdkInterface::class)) {
+                /** @var LoggerProviderSdkInterface $logger */
+                $logger = $this->app->get(LoggerProviderSdkInterface::class);
+                $logger->shutdown();
             }
 
             if ($this->app->resolved(MeterProviderSdkInterface::class)) {
