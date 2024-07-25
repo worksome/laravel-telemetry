@@ -5,7 +5,9 @@ declare(strict_types=1);
 // The Configuration is based on OpenTelemetry's naming convention.
 return [
 
-    'enabled' => env('LARAVEL_TELEMETRY_ENABLED', true),
+    'sdk' => [
+        'disabled' => ! env('LARAVEL_TELEMETRY_ENABLED', true)
+    ],
 
     'exporter' => [
         'otlp' => [

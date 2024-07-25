@@ -20,6 +20,7 @@ You can publish the config file with:
 ```shell
 php artisan vendor:publish --tag="laravel-telemetry-config"
 ```
+
 ## Usage
 
 This package will work out of the box with a default OTLP exporter configuration.
