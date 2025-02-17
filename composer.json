@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/contracts": "^10.48 || ^11.0",
+        "illuminate/contracts": "^10.48 || ^11.0 || ^12.0",
         "open-telemetry/api": "^1.0.3",
         "open-telemetry/sdk": "^1.0.8",
         "open-telemetry/exporter-otlp": "^1.0.4",
@@ -27,10 +27,10 @@
         "google/protobuf": "^3.25",
         "larastan/larastan": "^2.9",
         "nunomaduro/collision": "^7.10 || ^8.1",
-        "orchestra/testbench": "^8.21.1 || ^9.2",
-        "pestphp/pest": "^2.34",
-        "pestphp/pest-plugin-laravel": "^2.4",
-        "worksome/coding-style": "^2.11"
+        "orchestra/testbench": "^8.21.1 || ^9.2 || ^10.0",
+        "pestphp/pest": "^2.34 || ^3.7",
+        "pestphp/pest-plugin-laravel": "^2.4 || ^3.1",
+        "worksome/coding-style": "^2.11 || ^3.1"
     },
     "autoload": {
         "psr-4": {
