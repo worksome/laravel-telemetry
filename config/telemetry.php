@@ -6,7 +6,7 @@ declare(strict_types=1);
 return [
 
     'sdk' => [
-        'disabled' => ! env('LARAVEL_TELEMETRY_ENABLED', true)
+        'disabled' => ! env('LARAVEL_TELEMETRY_ENABLED', true),
     ],
 
     'exporter' => [
