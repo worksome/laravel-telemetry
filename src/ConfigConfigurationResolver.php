@@ -28,7 +28,7 @@ class ConfigConfigurationResolver implements ResolverInterface
     private function variableNameToConfigKey(string $variableName): string
     {
         $names = collect(explode('_', $variableName))
-            ->map(fn(string $key) => strtolower($key))
+            ->map(fn (string $key) => strtolower($key))
             ->skip(1)
             ->all();
 
