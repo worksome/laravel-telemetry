@@ -13,9 +13,9 @@ use OpenTelemetry\SDK\Common\Configuration\Resolver\ResolverInterface;
  */
 class ConfigConfigurationResolver implements ResolverInterface
 {
-    private const PREFIX = 'telemetry';
+    private const string PREFIX = 'telemetry';
 
-    public function retrieveValue(string $variableName)
+    public function retrieveValue(string $variableName): mixed
     {
         return config()->get($this->variableNameToConfigKey($variableName));
     }

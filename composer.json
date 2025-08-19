@@ -18,25 +18,24 @@
     "require": {
         "php": "^8.3",
         "illuminate/contracts": "^11.0 || ^12.0",
-        "open-telemetry/api": "^1.2",
-        "open-telemetry/exporter-otlp": "^1.2",
-        "open-telemetry/sdk": "^1.2",
-        "open-telemetry/sem-conv": "^1.30",
+        "open-telemetry/api": "^1.4",
+        "open-telemetry/exporter-otlp": "^1.3",
+        "open-telemetry/sdk": "^1.7",
+        "open-telemetry/sem-conv": "^1.36",
         "php-http/guzzle7-adapter": "^1.1"
     },
     "require-dev": {
         "google/protobuf": "^3.22 || ^4.0",
         "larastan/larastan": "^3.1",
-        "nunomaduro/collision": "^7.10 || ^8.1.1",
-        "orchestra/testbench": "^9.12 || ^10.1",
-        "pestphp/pest": "^3.7",
-        "pestphp/pest-plugin-laravel": "^3.1",
+        "nunomaduro/collision": "^7.12 || ^8.8",
+        "orchestra/testbench": "^9.14 || ^10.4",
+        "pestphp/pest": "^3.8",
+        "pestphp/pest-plugin-laravel": "^3.2",
         "worksome/coding-style": "^3.2"
     },
     "autoload": {
         "psr-4": {
-            "Worksome\\LaravelTelemetry\\": "src",
-            "Worksome\\LaravelTelemetry\\Database\\Factories\\": "database/factories"
+            "Worksome\\LaravelTelemetry\\": "src"
         }
     },
     "autoload-dev": {
